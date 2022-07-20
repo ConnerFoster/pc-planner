@@ -13,6 +13,7 @@ app.use(express.urlencoded({extended: false}))
 
 app.use('/categories', require('./routes/categoryRoutes'))
 app.use('/manufacturers', require('./routes/manufacturerRoutes'))
+app.use('/parts', require('./routes/partRoutes'))
 
 app.use(handler)
 

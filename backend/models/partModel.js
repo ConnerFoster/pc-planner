@@ -18,5 +18,8 @@ const PartSchema = new Schema({
 })
 
 //Add Virtual for URL
+PartSchema.virtual('url').get(() => {
+  return '/parts/' + this._id
+})
 
 module.exports = mongoose.model('Part', PartSchema)

@@ -1,7 +1,7 @@
 const asyncHandler = require('express-async-handler')
 const Part = require('../models/partModel')
 const Category = require('../models/categoryModel')
-const manufacturer = require('../models/manufacturerModel')
+const Manufacturer = require('../models/manufacturerModel')
 
 //Gets list of parts
 const getAllParts = asyncHandler(async (req, res) => {
@@ -25,29 +25,39 @@ const postPart = asyncHandler(async (req, res) => {
     )
   }
 
-  const manufacturer = await Manufacturer.create({
-    title: req.body.title,
+  const category = Category.findOne({title: req.body.category})
+  const manufacturer = Manufacturer.findOne({title: req.body.manufacturer})
+
+  const part = await Part.create({
+    name: req.body.name,
     description: req.body.description,
+    price: req.body.price,
+    stock: req.body.stock,
+    category: category._id,
+    manufacturer: manufacturer._id,
   })
 
-  res.json(manufacturer)
+  res.json(part)
 })
 
-//Get a manufacturer by id
-const getManufacturer = asyncHandler(async (req, res) => {
-  const manufacturer = await Manufacturer.findById(req.params.id)
+//Get a part by id
+const getPart = asyncHandler(async (req, res) => {
+  const part = await Part.findById(req.params.id).populate(
+    'category manufacturer'
+  )
 
-  if (!manufacturer) {
+  if (!part) {
     res.status(400)
-    throw new Error('manufacturer not found')
+    throw new Error('part not found')
   }
 
-  res.json(manufacturer)
+  res.json(part)
 })
 
 //Update a manufacturer
-const updateManufacturer = asyncHandler(async (req, res) => {
-  const manufacturer = await Manufacturer.findById(req.params.id)
+const updatePart = asyncHandler(async (req, res) => {
+  res.json({message: 'update a part'})
+  /*const manufacturer = await Manufacturer.findById(req.params.id)
 
   if (!manufacturer) {
     res.status(400)
@@ -58,12 +68,13 @@ const updateManufacturer = asyncHandler(async (req, res) => {
     new: true,
   })
 
-  res.json(update)
+  res.json(update)*/
 })
 
 //Delete a manufacturer
-const deleteManufacturer = asyncHandler(async (req, res) => {
-  const manufacturer = await Manufacturer.findById(req.params.id)
+const deletePart = asyncHandler(async (req, res) => {
+  res.json({message: 'delete a part'})
+  /*  const manufacturer = await Manufacturer.findById(req.params.id)
 
   if (!manufacturer) {
     res.status(400)
@@ -72,13 +83,13 @@ const deleteManufacturer = asyncHandler(async (req, res) => {
 
   await manufacturer.remove()
 
-  res.json({id: req.params.id})
+  res.json({id: req.params.id})*/
 })
 
 module.exports = {
-  getAllManufacturers,
-  postManufacturer,
-  getManufacturer,
-  updateManufacturer,
-  deleteManufacturer,
+  getAllParts,
+  postPart,
+  getPart,
+  updatePart,
+  deletePart,
 }
