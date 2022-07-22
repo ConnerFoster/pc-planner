@@ -1,5 +1,6 @@
 const asyncHandler = require('express-async-handler')
 const Category = require('../models/categoryModel')
+const Part = require('../models/partModel')
 
 //Gets list of categories
 const getAllCategories = asyncHandler(async (req, res) => {
@@ -60,9 +61,18 @@ const deleteCategory = asyncHandler(async (req, res) => {
     throw new Error('Category not found')
   }
 
-  await category.remove()
+  const parts = await Part.find({category: category._id})
 
-  res.json({id: req.params.id})
+  if (parts.length > 0) {
+    res.json({
+      parts_need_removed: parts,
+      message: 'some parts need removed before category can be removed',
+    })
+  } else {
+    await category.remove()
+
+    res.json({id: req.params.id, message: 'deletion successful'})
+  }
 })
 
 module.exports = {
