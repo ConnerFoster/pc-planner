@@ -1,13 +1,18 @@
 import { GiHamburgerMenu } from "react-icons/gi";
+import { MdViewList } from "react-icons/md";
+import { CgClose } from "react-icons/cg";
+
 import {Link} from 'react-router-dom'
 import { useState } from 'react'
 
 function Header() {
-  const [menuOpen, setMenuOpen] = useState(true)
+  const [menuOpen, setMenuOpen] = useState(false)
 
   const toggleMenu = () => {
       setMenuOpen(prev => !prev)
   }
+
+  const icon = menuOpen ? <CgClose /> :  <GiHamburgerMenu />
 
   return (
     <header className="header">
@@ -16,10 +21,10 @@ function Header() {
         </div>
 
         <nav className="menu">
-            <button className="btn" onClick={toggleMenu}> <GiHamburgerMenu /> </button>
+            <button className="btn" onClick={toggleMenu}> {icon} </button>
             <ul className={`menuLinks ${menuOpen ? "showMenu" : ""}`}>
-                <li><Link to='/'>My List</Link></li>
-                <hr />
+                <li id="my-list-nav"><Link to='/'><MdViewList style={{paddingTop: '2.5px'}}/> My List</Link></li>
+                
                 <li><Link to='/categories'>Categories</Link></li>
                 <li><Link to='/manufacturers'>Manufacturers</Link></li>
                 <li><Link to='/parts'>All Parts</Link></li>

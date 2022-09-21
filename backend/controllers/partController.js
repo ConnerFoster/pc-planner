@@ -5,7 +5,7 @@ const Manufacturer = require('../models/manufacturerModel')
 
 //Gets list of parts
 const getAllParts = asyncHandler(async (req, res) => {
-  const parts = await Part.find()
+  const parts = await Part.find().populate('category manufacturer')
 
   res.json(parts)
 })
@@ -25,16 +25,13 @@ const postPart = asyncHandler(async (req, res) => {
     )
   }
 
-  const category = Category.findOne({title: req.body.category})
-  const manufacturer = Manufacturer.findOne({title: req.body.manufacturer})
-
   const part = await Part.create({
     name: req.body.name,
     description: req.body.description,
     price: req.body.price,
     stock: req.body.stock,
-    category: category._id,
-    manufacturer: manufacturer._id,
+    category: req.body.category,
+    manufacturer: req.body.manufacturer,
   })
 
   res.json(part)
@@ -54,36 +51,33 @@ const getPart = asyncHandler(async (req, res) => {
   res.json(part)
 })
 
-//Update a manufacturer
+//Update a part
 const updatePart = asyncHandler(async (req, res) => {
-  res.json({message: 'update a part'})
-  /*const manufacturer = await Manufacturer.findById(req.params.id)
+  const part = await Part.findById(req.params.id)
 
-  if (!manufacturer) {
+  if (!part) {
     res.status(400)
-    throw new Error('manufacturer not found')
+    throw new Error('part not found')
   }
 
-  const update = await Manufacturer.findByIdAndUpdate(req.params.id, req.body, {
+  const update = await Part.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
   })
 
-  res.json(update)*/
+  res.json(update)
 })
 
-//Delete a manufacturer
+//Delete a part
 const deletePart = asyncHandler(async (req, res) => {
-  res.json({message: 'delete a part'})
-  /*  const manufacturer = await Manufacturer.findById(req.params.id)
+  const part = await Part.findById(req.params.id)
 
-  if (!manufacturer) {
+  if (!part) {
     res.status(400)
-    throw new Error('manufacturer not found')
+    throw new Error('Part not found')
   }
+  await part.remove()
 
-  await manufacturer.remove()
-
-  res.json({id: req.params.id})*/
+  res.json({id: req.params.id, message: 'deletion successful'})
 })
 
 module.exports = {

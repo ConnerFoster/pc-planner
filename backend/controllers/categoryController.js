@@ -65,7 +65,6 @@ const deleteCategory = asyncHandler(async (req, res) => {
 
   if (parts.length > 0) {
     res.json({
-      parts_need_removed: parts,
       message: 'some parts need removed before category can be removed',
     })
   } else {

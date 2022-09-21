@@ -1,6 +1,6 @@
 const asyncHandler = require('express-async-handler')
 const Manufacturer = require('../models/manufacturerModel')
-
+const Part = require('../models/partModel')
 //Gets list of manufacturers
 const getAllManufacturers = asyncHandler(async (req, res) => {
   const manufacturers = await Manufacturer.find()
@@ -57,12 +57,20 @@ const deleteManufacturer = asyncHandler(async (req, res) => {
 
   if (!manufacturer) {
     res.status(400)
-    throw new Error('manufacturer not found')
+    throw new Error('Manufacturer not found')
   }
 
-  await manufacturer.remove()
+  const parts = await Part.find({manufacturer: manufacturer._id})
 
-  res.json({id: req.params.id})
+  if (parts.length > 0) {
+    res.json({
+      message: 'some parts need removed before manufacturer can be removed',
+    })
+  } else {
+    await manufacturer.remove()
+
+    res.json({id: req.params.id, message: 'deletion successful'})
+  }
 })
 
 module.exports = {
