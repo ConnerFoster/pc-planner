@@ -59,6 +59,27 @@ export const partSlice = createSlice({
         state.message = action.payload
         state.isLoading = false
       })
+      .addCase(updatePart.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(updatePart.rejected, (state, action) => {
+        state.isError = true
+        state.message = action.payload
+        state.isLoading = false
+      })
+      .addCase(updatePart.fulfilled, (state, action) => {
+        state.isSuccess = true
+        const update = state.parts.find((p) => p._id === action.payload._id)
+        if (update) {
+          update.name = action.payload.name
+          update.description = action.payload.description
+          update.stock = action.payload.stock
+          update.price = action.payload.price
+          update.category = action.payload.category
+          update.manufacturer = action.payload.manufacturer
+        }
+        state.isLoading = false
+      })
   },
 })
 
@@ -120,6 +141,23 @@ export const deletePart = createAsyncThunk(
   async (id, thunkAPI) => {
     try {
       return await partService.deletePart(id)
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString()
+      return thunkAPI.rejectWithValue(message)
+    }
+  }
+)
+
+export const updatePart = createAsyncThunk(
+  'parts/update',
+  async (data, thunkAPI) => {
+    try {
+      return await partService.updatePart(data)
     } catch (error) {
       const message =
         (error.response &&

@@ -10,6 +10,9 @@ import PartPage from './pages/PartPage'
 import CategoryForm from './components/CategoryForm'
 import ManufacturerForm from './components/ManufacturerForm'
 import PartForm from './components/PartForm'
+import CategoryUpdate from './components/CategoryUpdate'
+import ManufacturerUpdate from './components/ManufacturerUpdate'
+import PartUpdate from './components/PartUpdate'
 
 function App() {
   return (
@@ -32,6 +35,13 @@ function App() {
               path='/manufacturers/create'
               element={<ManufacturerForm />}></Route>
             <Route path='/parts/create' element={<PartForm />}></Route>
+            <Route
+              path='/categories/update/:id'
+              element={<CategoryUpdate />}></Route>
+            <Route
+              path='/manufacturers/update/:id'
+              element={<ManufacturerUpdate />}></Route>
+            <Route path='/parts/update/:id' element={<PartUpdate />}></Route>
           </Routes>
         </div>
       </Router>

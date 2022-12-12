@@ -50,10 +50,23 @@ function CategoryPage() {
     }
   }
 
+  const addToStorage = (category, part) => {
+    let obj = {
+      id: part._id,
+      name: part.name,
+      price: part.price,
+      category: part.category.title,
+    }
+    localStorage.setItem(category, JSON.stringify(obj))
+    navigate('/')
+  }
+
   return (
     <div className='container page-heading'>
       <h1>{category.title}</h1>
-      <button className='updelete-btn'>Update</button>
+      <Link to={`/categories/update/${category._id}`} className='updelete-btn'>
+        Update
+      </Link>
       <button className='updelete-btn' onClick={deleteBtn}>
         Delete
       </button>
@@ -61,29 +74,41 @@ function CategoryPage() {
       <h4 className='page-desc'>{category.description}</h4>
 
       <table className='table container'>
-        <tbody>
+        <tbody className='mc-table'>
           <tr>
             <th>Name</th>
             <th>Manufacturer</th>
             <th>Stock</th>
             <th>Price</th>
+            <th></th>
           </tr>
           {partsByCategory.map((p) => (
             <tr key={p._id}>
               <td>
+                <div className='th-small'>Name</div>
                 <Link className='table-links' to={`/parts/${p._id}`}>
                   {p.name}
                 </Link>
               </td>
               <td>
+                <div className='th-small'>Manufacturer</div>
                 <Link
                   className='table-links'
                   to={`/manufacturers/${p.manufacturer._id}`}>
                   {p.manufacturer.title}
                 </Link>
               </td>
-              <td>{p.stock}</td>
-              <td>${p.price}</td>
+              <td className='stock'>{p.stock}</td>
+              <td>
+                <div className='th-small'>Price</div>${p.price}
+              </td>
+              <td>
+                <button
+                  onClick={() => addToStorage(category._id, p)}
+                  className='add-to-list'>
+                  Add
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>

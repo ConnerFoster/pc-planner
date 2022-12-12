@@ -26,11 +26,29 @@ const deletePart = async (id) => {
   return response.data
 }
 
+const updatePart = async (data) => {
+  const id = data.id.id
+
+  const body = {
+    name: data.name,
+    description: data.description,
+    price: data.price,
+    stock: data.stock,
+    category: data.category,
+    manufacturer: data.manufacturer,
+  }
+
+  const response = await axios.put(API_URL + id, body)
+
+  return response.data
+}
+
 const partService = {
   getParts,
   getPartByID,
   deletePart,
   createPart,
+  updatePart,
 }
 
 export default partService

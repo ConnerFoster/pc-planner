@@ -30,7 +30,7 @@ function Categories() {
   return (
     <>
       <section className='container'>
-        <h1 className='heading'>All Categories</h1>
+        <h1 className='heading'>All Components</h1>
       </section>
 
       <section className='content container'>

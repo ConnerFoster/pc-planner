@@ -72,6 +72,26 @@ export const categorySlice = createSlice({
         state.message = action.payload
         state.isLoading = false
       })
+      .addCase(updateCategory.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(updateCategory.rejected, (state, action) => {
+        state.isError = true
+        state.message = action.payload
+        state.isLoading = false
+      })
+      .addCase(updateCategory.fulfilled, (state, action) => {
+        state.isSuccess = true
+        const update = state.categories.find(
+          (c) => c._id === action.payload._id
+        )
+        if (update) {
+          update.title = action.payload.title
+          update.description = action.payload.description
+        }
+        console.log(action.payload)
+        state.isLoading = false
+      })
   },
 })
 
@@ -80,6 +100,24 @@ export const createCategory = createAsyncThunk(
   async (data, thunkAPI) => {
     try {
       return await categoryService.createCategory(data)
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString()
+      return thunkAPI.rejectWithValue(message)
+    }
+  }
+)
+
+export const updateCategory = createAsyncThunk(
+  'categories/update',
+  async (data, thunkAPI) => {
+    try {
+      console.log(data)
+      return await categoryService.updateCategory(data)
     } catch (error) {
       const message =
         (error.response &&

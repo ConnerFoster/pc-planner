@@ -2,6 +2,7 @@ const asyncHandler = require('express-async-handler')
 const Part = require('../models/partModel')
 const Category = require('../models/categoryModel')
 const Manufacturer = require('../models/manufacturerModel')
+const mongoose = require('mongoose')
 
 //Gets list of parts
 const getAllParts = asyncHandler(async (req, res) => {

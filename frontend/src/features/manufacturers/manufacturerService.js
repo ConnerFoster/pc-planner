@@ -22,10 +22,31 @@ const createManufacturer = async (data) => {
   return response.data
 }
 
+const updateManufacturer = async (data) => {
+  const id = data.id
+
+  const body = {
+    title: data.title,
+    description: data.description,
+  }
+
+  const response = await axios.put(API_URL + id, body)
+
+  return response.data
+}
+
+const deleteManufacturer = async (manufacturerId) => {
+  const response = await axios.delete(API_URL + manufacturerId)
+
+  return response.data
+}
+
 const manufacturerService = {
   getManufacturers,
   getManufacturerByID,
   createManufacturer,
+  updateManufacturer,
+  deleteManufacturer,
 }
 
 export default manufacturerService

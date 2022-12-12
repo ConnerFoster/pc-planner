@@ -4,6 +4,19 @@ const API_URL = 'http://localhost:5000/api/categories/'
 
 const createCategory = async (data) => {
   const response = await axios.post(API_URL, data)
+  console.log(data)
+  return response.data
+}
+
+const updateCategory = async (data) => {
+  const id = data.id
+
+  const body = {
+    title: data.title,
+    description: data.description,
+  }
+
+  const response = await axios.put(API_URL + id, body)
 
   return response.data
 }
@@ -31,6 +44,7 @@ const categoryService = {
   getCategoryByID,
   createCategory,
   deleteCategory,
+  updateCategory,
 }
 
 export default categoryService
