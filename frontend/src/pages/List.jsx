@@ -1,6 +1,7 @@
 import {useSelector, useDispatch} from 'react-redux'
 import {useEffect, useState} from 'react'
 import {getCategories, reset} from '../features/categories/categorySlice'
+import {getParts} from '../features/parts/partSlice'
 import {Link, useNavigate} from 'react-router-dom'
 import {AiOutlineClose} from 'react-icons/ai'
 import {FaAmazon, FaDownload} from 'react-icons/fa'
@@ -12,11 +13,22 @@ function List() {
   const {categories, isError, message} = useSelector(
     (state) => state.categories
   )
-  const {part} = useSelector((state) => state.parts)
 
-  const [state, setState] = useState('')
+  const ids = []
+  categories.forEach((c) => {
+    ids.push(c._id)
+  })
 
-  const selections = Object.keys(localStorage)
+  const getSelections = () => {
+    let selections = Object.keys(localStorage)
+    selections.forEach((s, i) => {
+      if (!ids.includes(s)) {
+        console.log(s)
+        selections.splice(i, 1)
+      }
+    })
+    return selections
+  }
 
   useEffect(() => {
     if (isError) {
@@ -45,7 +57,7 @@ function List() {
   }
 
   const displayPrice = (id) => {
-    let storedPart = JSON.parse(checkStorage(id))
+    let storedPart = getStoredPart(id)
     return <h4 className='price'>${storedPart.price}</h4>
   }
 
@@ -56,24 +68,38 @@ function List() {
   }
 
   const displayTotal = () => {
+    let selections = getSelections()
     let total = 0
     selections.forEach((s) => {
-      total += Number(JSON.parse(checkStorage(s)).price)
+      total += Number(getStoredPart(s).price)
     })
     return total
   }
 
   const purchaseLink = (id) => {
-    const storedPart = JSON.parse(checkStorage(id))
+    const storedPart = getStoredPart(id)
     const formatted = storedPart.name.replace(' ', '+')
     return `https://amazon.com/s?k=${formatted}`
   }
 
+  const getStoredPart = (id) => {
+    try {
+      JSON.parse(checkStorage(id))
+    } catch (e) {
+      return false
+    }
+
+    let storedPart = JSON.parse(checkStorage(id))
+    return storedPart
+  }
+
   const createCSV = () => {
+    let selections = getSelections()
+    console.log(selections)
     const data = []
     data.push(['Component', 'Selection', 'Price'])
     selections.forEach((id) => {
-      const storedPart = JSON.parse(checkStorage(id))
+      const storedPart = getStoredPart(id)
       const itemArray = [
         storedPart.category,
         storedPart.name,

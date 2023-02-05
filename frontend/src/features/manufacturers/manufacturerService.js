@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const API_URL = 'http://localhost:5000/api/manufacturers/'
+const API_URL = 'https://pc-planner-api.onrender.com/api/manufacturers/'
 
 const getManufacturers = async () => {
   const response = await axios.get(API_URL)
